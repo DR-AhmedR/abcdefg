@@ -6,24 +6,55 @@
   <title>داتا أرقام بالأسم ---</title>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="0da07e57-c093-45e8-949b-301b38dd4b3b"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
   <style>
     body {
       background: #0f0f0f;
       color: #e5e5e5;
       font-family: "Tajawal", sans-serif;
-    }
-    /* منع كليك يمين */
-    body {
       -webkit-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* تأثير جميل عند تمرير الماوس على الزر */
+    button:hover {
+      transform: scale(1.05);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    /* تأثير Fade in للنتيجة */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive للهواتف والأجهزة الصغيرة */
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      input {
+        font-size: 0.9rem;
+      }
+      button {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-center items-center p-4">
 
-  <div class="bg-zinc-900 shadow-2xl rounded-2xl p-6 w-full max-w-lg text-center">
+  <div class="container bg-zinc-900 shadow-2xl rounded-2xl p-6 w-full max-w-lg text-center">
     <h1 class="text-2xl font-bold text-green-400 mb-4">📱 داتا أرقام بالأسم</h1>
     <p class="mb-4 text-gray-400">ادخل رقم موبايل (11 رقم) للحصول على البيانات</p>
 
@@ -46,31 +77,38 @@
   </footer>
 
   <script>
-    // منع فتح DevTools
+    // منع فتح DevTools والنسخ
     document.addEventListener("keydown", function(e) {
       if (e.keyCode == 123 || // F12
           (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || // Ctrl+Shift+I/J
-          (e.ctrlKey && e.keyCode == 85)) { // Ctrl+U
+          (e.ctrlKey && e.keyCode == 85) || // Ctrl+U
+          (e.ctrlKey && e.keyCode == 67)) { // Ctrl+C
         e.preventDefault();
         alert("ممنوع العبث 😈");
         return false;
       }
     });
 
+    document.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+      alert("ممنوع كليك يمين 😈");
+      return false;
+    });
+
     function fetchData() {
       const phone = document.getElementById("phone").value.trim();
       const resultBox = document.getElementById("result");
 
-      // فلترة الرقم: لازم يكون 11 رقم
+      // التحقق من الرقم
       if (!/^[0-9]{11}$/.test(phone)) {
         alert("❌ من فضلك ادخل رقم صحيح مكون من 11 رقم");
         return;
       }
 
-      resultBox.classList.remove("hidden");
+      resultBox.classList.remove("hidden", "fade-in");
       resultBox.innerHTML = "<p class='text-yellow-400'>⏳ جاري جلب البيانات...</p>";
 
-      // استدعاء API
+      // API Call
       fetch(`https://ebnelnegm.com/api.php?num=${phone}`)
         .then(res => res.json())
         .then(data => {
@@ -78,11 +116,13 @@
             <h2 class="text-lg font-bold text-green-400 mb-2">✅ النتيجة:</h2>
             <pre class="bg-black p-3 rounded-lg overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
           `;
+          resultBox.classList.add("fade-in");
         })
         .catch(err => {
           resultBox.innerHTML = "<p class='text-red-500'>⚠️ حصل خطأ أثناء جلب البيانات</p>";
+          resultBox.classList.add("fade-in");
         });
     }
-  </script>
+  </script> 
 </body>
 </html>
