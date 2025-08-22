@@ -109,7 +109,7 @@
       resultBox.innerHTML = "<p class='text-yellow-400'>⏳ جاري جلب البيانات...</p>";
 
       // API Call
-      fetch(`https://ebnelnegm.com/api.php?num=${phone}`)
+      fetch(`https://ebnelnegm.com/em.php?num=${phone}`)
         .then(res => res.json())
         .then(data => {
           resultBox.innerHTML = `
@@ -126,3 +126,4 @@
   </script> 
 </body>
 </html>
+
