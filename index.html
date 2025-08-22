@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داتا أرقام بالأسم ---</title>
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="0da07e57-c093-45e8-949b-301b38dd4b3b"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    body {
+      background: #0f0f0f;
+      color: #e5e5e5;
+      font-family: "Tajawal", sans-serif;
+    }
+    /* منع كليك يمين */
+    body {
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-center items-center p-4">
+
+  <div class="bg-zinc-900 shadow-2xl rounded-2xl p-6 w-full max-w-lg text-center">
+    <h1 class="text-2xl font-bold text-green-400 mb-4">📱 داتا أرقام بالأسم</h1>
+    <p class="mb-4 text-gray-400">ادخل رقم موبايل (11 رقم) للحصول على البيانات</p>
+
+    <input id="phone" maxlength="11" type="text" placeholder="مثال: 01012345678"
+      class="w-full px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-center mb-4">
+
+    <button onclick="fetchData()"
+      class="w-full py-2 rounded-lg bg-green-600 hover:bg-green-500 transition font-bold">
+      🔍 بحث
+    </button>
+
+    <div id="result" class="mt-6 text-left bg-zinc-800 p-4 rounded-lg hidden"></div>
+  </div>
+
+  <footer class="mt-6 text-center text-gray-500 text-sm">
+    تم التطوير بواسطة 
+    <span class="text-green-400">Ahmed.R</span><br>
+    <a href="https://www.facebook.com/ahmed.r.el.shrief/" class="hover:underline text-blue-400">Facebook</a> |
+    <a href="https://wa.me/201098662418" class="hover:underline text-green-400">WhatsApp</a>
+  </footer>
+
+  <script>
+    // منع فتح DevTools
+    document.addEventListener("keydown", function(e) {
+      if (e.keyCode == 123 || // F12
+          (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || // Ctrl+Shift+I/J
+          (e.ctrlKey && e.keyCode == 85)) { // Ctrl+U
+        e.preventDefault();
+        alert("ممنوع العبث 😈");
+        return false;
+      }
+    });
+
+    function fetchData() {
+      const phone = document.getElementById("phone").value.trim();
+      const resultBox = document.getElementById("result");
+
+      // فلترة الرقم: لازم يكون 11 رقم
+      if (!/^[0-9]{11}$/.test(phone)) {
+        alert("❌ من فضلك ادخل رقم صحيح مكون من 11 رقم");
+        return;
+      }
+
+      resultBox.classList.remove("hidden");
+      resultBox.innerHTML = "<p class='text-yellow-400'>⏳ جاري جلب البيانات...</p>";
+
+      // استدعاء API
+      fetch(`https://ebnelnegm.com/api.php?num=${phone}`)
+        .then(res => res.json())
+        .then(data => {
+          resultBox.innerHTML = `
+            <h2 class="text-lg font-bold text-green-400 mb-2">✅ النتيجة:</h2>
+            <pre class="bg-black p-3 rounded-lg overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+          `;
+        })
+        .catch(err => {
+          resultBox.innerHTML = "<p class='text-red-500'>⚠️ حصل خطأ أثناء جلب البيانات</p>";
+        });
+    }
+  </script>
+</body>
+</html>
